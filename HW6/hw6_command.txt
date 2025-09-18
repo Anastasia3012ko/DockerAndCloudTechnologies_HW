@@ -1,0 +1,49 @@
+1. Создание Security Group
+
+aws ec2 create-security-group --group-name 131224-wdm-kolobova-sg --description "Security Group for MySQL and HTTPS and SSH" 
+
+2. Добавление inbound-правил (MySQL и HTTPS)
+2.1 MySQL (port 3306)
+
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-0d7173e22c8ed3823 \
+    --protocol tcp \
+    --port 3306 \
+    --cidr 0.0.0.0/0 \
+    --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=mysql}]'
+
+aws ec2 authorize-security-group-ingress --group-id sg-0d7173e22c8ed3823 --protocol tcp --port 3306 --cidr 0.0.0.0/0 --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=mysql}]'
+
+2.2 HTTPS (port 443)
+
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-0d7173e22c8ed3823 \
+    --protocol tcp \
+    --port 443 \
+    --cidr 0.0.0.0/0 \
+    --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=https}]'
+
+aws ec2 authorize-security-group-ingress --group-id sg-0d7173e22c8ed3823 --protocol tcp --port 443 --cidr 0.0.0.0/0 --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=https}]'
+
+3. В AWS Console (UI)
+
+в EC2 → Security Groups → 131224-wdm-kolobova-sg 
+
+правило:
+Type: SSH
+Port: 22 (автоматически)
+Source: My IP 37.201.5.13/32
+Description: SSH My IP
+
+4. запрос результат
+
+aws ec2 describe-security-groups \
+    --group-ids sg-0d7173e22c8ed3823 \
+    --query 'SecurityGroups[*].IpPermissions' \
+    --output json
+
+aws ec2 describe-security-groups --group-ids sg-0d7173e22c8ed3823 --query 'SecurityGroups[*].IpPermissions' --output json
+
+5. Удаление Security Group 131224-wdm-kolobova-sg
+
+aws ec2 delete-security-group --group-id sg-0d7173e22c8ed3823
