@@ -5,7 +5,7 @@ FROM node:18-slim
 WORKDIR /usr/src/app
 
 # Копируем package.json и package-lock.json (если есть)
-COPY package.json ./
+COPY package*.json ./
 
 # Устанавливаем зависимости (только production)
 RUN npm install --only=production
